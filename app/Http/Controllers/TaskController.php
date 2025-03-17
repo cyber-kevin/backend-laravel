@@ -19,7 +19,7 @@ class TaskController extends Controller
             return response()->json(['message'=>'Invalid status.']);
         }
 
-        $tasks = Task::where('user_id', 1)
+        $tasks = Task::where('user_id', $request->user()->id)
         ->when($status, fn($query, $status)=>$query->where('status', $status))
         ->get();
 
@@ -38,7 +38,7 @@ class TaskController extends Controller
             'end_date'=>'required|date',
         ]);
 
-        $task = Task::create([...$data, 'user_id'=>1]);
+        $task = Task::create([...$data, 'user_id'=>$request->user()->id]);
 
         return response()->json($task, 201);
     }
